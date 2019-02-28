@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Welcome to Glitch!</title>
+  <meta name="description" content="A cool thing made with Glitch">
+  <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  body {
+    margin: 20px;
+  }
+
+  #consoleContainer {
+    width: 500px;
+    height: 200px;
+    background-color: lightgray;
+    padding: 20px;
+  }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>
+      Workbox v4 Demo
+    </h1>
+  </header>
+
+  <main>
+    <h3>Console:</h3>
+    <div id="consoleContainer"></div>
+
+    <script type="module">
+    import { Workbox } from 'https://storage.googleapis.com/workbox-cdn/releases/4.0.0/workbox-window.prod.mjs';
+
+    let consoleContainer = document.getElementById("consoleContainer");
+
+    function printToConsole(msg) {
+      let p = document.createElement('code');
+      p.innerText = msg;
+      consoleContainer.appendChild(p);
+    }
+
+    if ('serviceWorker' in navigator) {
+      const wb = new Workbox('/sw.js');
+
+      wb.addEventListener('activated', (event) => {
+        // `event.isUpdate` will be true if another version of the service
+        // worker was controlling the page when this version was registered.
+        if (!event.isUpdate)
+          printToConsole('Service worker activated for the first time!');
+        else
+          printToConsole('Service worker updated');
+
+      });
+
+      wb.addEventListener('waiting', (event) => {
+        printToConsole(`A new service worker has installed, but it can't activate` +
+          `until all tabs running the current version have fully unloaded.`);
+      });
+
+      wb.register();
+    }
+    </script>
+</body>
+
+</html>
